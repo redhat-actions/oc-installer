@@ -1,0 +1,19 @@
+{
+  "name": "openshift-actions",
+  "version": "1.0.0",
+  "description": "The OpenShift Extension for GitHub Actions gives you the ability to create workflows to automate the deployment process to OpenShift",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redhat-developer/openshift-actions.git"
+  },
+  "author": "Red Hat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/redhat-developer/openshift-actions/issues"
+  },
+  "homepage": "https://github.com/redhat-developer/openshift-actions#readme"
+}
