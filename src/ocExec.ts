@@ -1,9 +1,10 @@
 import * as core from '@actions/core';
+// eslint-disable-next-line no-unused-vars
 import { OcAuth, OpenShiftEndpoint } from './auth';
 import { Command } from './command';
 import { Installer } from './installer';
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
     const openShiftUrl = core.getInput('openshift_server_url');
     const parameters = core.getInput('parameters');
     const version = core.getInput('version');

@@ -2,11 +2,14 @@
   "name": "openshift-actions",
   "version": "1.0.0",
   "description": "The OpenShift Extension for GitHub Actions gives you the ability to create workflows to automate the deployment process to OpenShift",
-  "main": "index.js",
   "scripts": {
+    "clean": "rm -rf lib || rmdir lib /s /q",
     "compile": "tsc",
     "eslint": "node ./node_modules/eslint/bin/eslint.js . --ext .ts",
-    "build": "npm run eslint && npm run compile"
+    "build": "npm run eslint && npm run compile",
+    "test": "npm run clean && npm run compile && node ./lib/test/unit-tests.js",
+    "coverage:upload": "codecov -f coverage/coverage-final.json",
+    "production": "npm clean-install --production"
   },
   "repository": {
     "type": "git",
@@ -31,13 +34,28 @@
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.5",
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.6",
+    "@types/sinon": "^7.5.1",
+    "@types/sinon-chai": "^3.2.3",
     "@typescript-eslint/eslint-plugin": "^2.8.0",
     "@typescript-eslint/parser": "^2.8.0",
+    "chai": "^4.2.0",
+    "codecov": "^3.3.0",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "decache": "^4.5.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "mocha-jenkins-reporter": "^0.4.1",
+    "remap-istanbul": "^0.13.0",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0",
+    "vscode-test": "^1.2.0"
   }
 }

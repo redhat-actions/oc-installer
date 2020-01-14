@@ -1,10 +1,10 @@
 import * as core from '@actions/core';
-import * as ioUtil from '@actions/io/lib/io-util';
-import * as tc from '@actions/tool-cache';
-import { LATEST, LINUX, MACOSX, OC_TAR_GZ, OC_ZIP, WIN } from './constants';
 import * as fs from 'mz/fs';
+import * as ioUtil from '@actions/io/lib/io-util';
 import * as path from 'path';
+import * as tc from '@actions/tool-cache';
 import * as validUrl from 'valid-url';
+import { LATEST, LINUX, MACOSX, OC_TAR_GZ, OC_ZIP, WIN } from './constants';
 
 export class Installer {
     static async installOc(version: string, runnerOS: string): Promise<string> {

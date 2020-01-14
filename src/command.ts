@@ -14,7 +14,7 @@ export class Command {
 
     static prepareOcArgs(ocArgs: string): string {
         const interpolatedArgs = sub(ocArgs, process.env);
-        let args = split(interpolatedArgs);
+        let args: string[] = split(interpolatedArgs);
         if (args[0] === 'oc' || args[0] === 'oc.exe') {
             args = args.slice(1);
         }

@@ -13,4 +13,4 @@ inputs:
     description: 'Oc command to be executed'
 runs:
   using: 'node12'
-  main: '../lib/ocExec.js'
+  main: '../lib/src/ocExec.js'
