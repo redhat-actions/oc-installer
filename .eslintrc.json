@@ -1,0 +1,105 @@
+{
+    "root": true,
+    "parser":  "@typescript-eslint/parser",  // Specifies the ESLint parser
+    "extends":  [
+        "plugin:@typescript-eslint/recommended"  // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+    ],
+    "parserOptions":  {
+        "ecmaVersion":  2018,  // Allows for the parsing of modern ECMAScript features
+        "sourceType":  "module"  // Allows for the use of imports
+    },
+    "globals": {
+        "Promise": "readonly",
+        "process": "readonly"
+    },
+    "rules": {
+        "arrow-parens": [
+            1,
+            "as-needed"
+        ],
+        "max-len": [
+            1, 
+            { "code": 200 }
+        ],
+        "object-shorthand": [
+            1,
+            "consistent"
+        ],
+        "spaced-comment": [
+            1,
+            "always"
+        ],
+        "curly": [
+            1,
+            "multi-line"
+        ],
+        "indent": [
+            1,
+            4,
+            { "SwitchCase": 1 }
+        ],
+        "interface-name": 0,
+        "member-ordering": 0,
+        "new-parens": 1,
+        "no-multiple-empty-lines": [
+            1,
+            { "max": 1, "maxEOF": 1 }
+        ],
+        "no-console": 0,
+        "no-redeclare": 2,
+        "no-duplicate-imports": 1,
+        "no-unused-vars": 1,
+        "no-eval": 1,
+        "no-empty": 0,
+        "no-irregular-whitespace": 1,
+        "no-undef": 1,
+        "no-shadowed-variable": 0,
+        "no-throw-literal": 1,
+        "no-trailing-spaces": 1,
+        "no-unsafe-finally": 1,
+        "no-unused-expression": 0,
+        "no-var": 1,
+        "no-var-requires": 0,
+        "quote-props": [
+            1,
+            "consistent"
+        ],
+        "object-literal-shorthand": 0,
+        "object-literal-sort-keys": 0,
+        "one-var": [ 
+            1,
+            "never"
+        ],
+        "sort-imports": 1,
+        "prefer-const": 1,
+        "prefer-template": 1,
+        "quotes": [
+            1,
+            "single",
+            { "avoidEscape": true }
+        ],
+        "radix": 1,
+        "semi": [
+            1,
+            "always"
+        ],
+        "space-before-function-paren": [
+            1,
+            {
+                "anonymous": "never",
+                "named": "never",
+                "asyncArrow": "always"
+            }
+        ],
+        "comma-dangle": [
+            1,
+            "never"
+        ],
+        "eqeqeq": [
+            1,
+            "smart"
+        ],
+        "use-isnan": 1,
+        "camelcase": 1
+    }
+}
