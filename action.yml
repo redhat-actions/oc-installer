@@ -1,4 +1,4 @@
-name: 'OpenShift'
+name: 'OpenShift Action'
 description: 'This action allows you to connect to an OpenShift cluster and execute oc commands on it'
 author: 'Red Hat'
 branding:
