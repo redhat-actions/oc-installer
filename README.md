@@ -7,7 +7,7 @@ The OpenShift Extension for GitHub Actions gives you the ability to create workf
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
 | `version`        | _optional_ | Default: "latest". Must be in form `version: 'latest'`; It accepts 3 different values: version number (such as 3.11.36), url where to download oc bundle (i.e https://mirror.openshift.com/pub/openshift-v3/clients/3.11.36/linux/oc.tar.gz) or latest (which will download the latest version available). N.B: By using the version number you have to make sure it exists in our Oc repo - v.3 (https://mirror.openshift.com/pub/openshift-v3/clients/) or v.4 (https://mirror.openshift.com/pub/openshift-v4/clients/oc/) |
-| `openshift_server_url`        | _required_ | The URL of the Openshift cluster. We suggest to use secrets to store Openshift URL. Must be in form `openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}` |
+| `openshift_server_url`        | _required_ | The URL of the Openshift cluster. We suggest to use [secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets#creating-encrypted-secrets) to store Openshift URL. Must be in form `openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}` |
 | `parameters`            | _required_ | JSON with values to connect to the Openshift cluster. We suggest to use secrets to store sensitive data. Must be in form `parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'` [More Info](#openshift-authentication-methods-supported) |
 | `cmd`   | _required_ | One or more oc commands to be executed. |
 
@@ -50,8 +50,8 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Execute oc command  
-      uses: actions/openshift-actions@master
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-actions@v1.0
       with:
         version: 'latest'
         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
