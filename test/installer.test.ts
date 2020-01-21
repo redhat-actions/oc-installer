@@ -1,6 +1,7 @@
 import * as chai from 'chai';
 import * as fs from 'mz/fs';
 import * as ioUtil from '@actions/io/lib/io-util';
+import * as path from 'path';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as tc from '@actions/tool-cache';
@@ -220,10 +221,11 @@ suite('Installer', () => {
                 openshiftV3BaseUrl: 'urlv3',
                 openshiftV4BaseUrl: 'urlv4'
             };
-            process.env.GITHUB_WORKSPACE = 'path';
+            // eslint-disable-next-line no-undef
+            const pathJson = path.join(__dirname, '/../../oc-utils.json');
             const readFileStub = sandbox.stub(fs, 'readFile').resolves(ocUtils);
             const res = await Installer.getOcUtils();
-            expect(readFileStub).calledOnceWith('path/oc-utils.json');
+            expect(readFileStub).calledOnceWith(pathJson);
             expect(res).deep.equals(ocUtilsJSON);
         });
     });
