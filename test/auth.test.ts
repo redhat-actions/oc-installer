@@ -87,7 +87,7 @@ suite('OcAuth', () => {
                 await OcAuth.loginOpenshift(null, 'path');
                 expect.fail();
             } catch (err) {
-                expect(err).equals('Endpoint is not valid');
+                expect(err.message).equals('Endpoint is not valid');
             }
         });
 

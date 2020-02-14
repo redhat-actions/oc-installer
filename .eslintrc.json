@@ -1,103 +1,97 @@
 {
     "root": true,
-    "parser":  "@typescript-eslint/parser",  // Specifies the ESLint parser
-    "parserOptions":  {
-        "ecmaVersion":  2018,  // Allows for the parsing of modern ECMAScript features
-        "sourceType":  "module"  // Allows for the use of imports
+    "env": {
+      "browser": true,
+      "es6": true,
+      "jasmine": true
     },
-    "globals": {
-        "Promise": "readonly",
-        "process": "readonly"
+    "extends": [
+      "airbnb-base",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "comment": true,
+      "project": "./tsconfig.json",
+      "sourceType": "module"
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "header",
+      "import"],
+    "settings": {
+      "import/core-modules": [ "vscode" ],
+      "import/parsers": {
+        "@typescript-eslint/parser": [".ts", ".tsx"]
+      },
+      "import/resolver": {
+        "typescript": {},
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts"
+          ]
+        }
+      },
+      "import/extensions": [
+        ".js",
+        ".jsx",
+        ".ts"
+      ]
     },
     "rules": {
-        "arrow-parens": [
-            1,
-            "as-needed"
-        ],
-        "max-len": [
-            1, 
-            { "code": 200 }
-        ],
-        "object-shorthand": [
-            1,
-            "consistent"
-        ],
-        "spaced-comment": [
-            1,
-            "always"
-        ],
-        "curly": [
-            1,
-            "multi-line"
-        ],
-        "indent": [
-            1,
-            4,
-            { "SwitchCase": 1 }
-        ],
-        "interface-name": 0,
-        "member-ordering": 0,
-        "new-parens": 1,
-        "no-multiple-empty-lines": [
-            1,
-            { "max": 1, "maxEOF": 1 }
-        ],
-        "no-console": 0,
-        "no-redeclare": 2,
-        "no-duplicate-imports": 1,
-        "no-unused-vars": 1,
-        "no-eval": 1,
-        "no-empty": 0,
-        "no-irregular-whitespace": 1,
-        "no-undef": 1,
-        "no-shadowed-variable": 0,
-        "no-throw-literal": 1,
-        "no-trailing-spaces": 1,
-        "no-unsafe-finally": 1,
-        "no-unused-expression": 0,
-        "no-use-before-define": 0,
-        "no-var": 1,
-        "no-var-requires": 0,
-        "quote-props": [
-            1,
-            "consistent"
-        ],
-        "object-literal-shorthand": 0,
-        "object-literal-sort-keys": 0,
-        "one-var": [ 
-            1,
-            "never"
-        ],
-        "sort-imports": 1,
-        "prefer-const": 1,
-        "prefer-template": 1,
-        "quotes": [
-            1,
-            "single",
-            { "avoidEscape": true }
-        ],
-        "radix": 1,
-        "semi": [
-            1,
-            "always"
-        ],
-        "space-before-function-paren": [
-            1,
-            {
-                "anonymous": "never",
-                "named": "never",
-                "asyncArrow": "always"
-            }
-        ],
-        "comma-dangle": [
-            1,
-            "never"
-        ],
-        "eqeqeq": [
-            1,
-            "smart"
-        ],
-        "use-isnan": 1,
-        "camelcase": 1
-    }
-}
+      "header/header": [2, "./header.js"],
+      "camelcase": 2,
+      "consistent-return": 0,
+      "consistent-this": [1, "that"],
+      "curly": ["error", "multi-line"],
+      "default-case": [2],
+      "dot-notation": [2],
+      "no-multiple-empty-lines": [1, { "max": 1, "maxEOF": 0 }],
+      "eqeqeq": [2, "allow-null"],
+      "guard-for-in": 2,
+      "import/no-unresolved": ["error"],
+      "import/no-duplicates": ["error"],
+      "import/prefer-default-export": 0,
+      "max-nested-callbacks": [1, 4],
+      "max-classes-per-file": [0],
+      "no-alert": 2,
+      "no-caller": 2,
+      "no-console": 0,
+      "no-constant-condition": 2,
+      "no-debugger": 2,
+      "no-else-return": ["error"],
+      "no-global-strict": 0,
+      "no-irregular-whitespace": ["error"],
+      "no-param-reassign": ["off", { "props": false }],
+      "no-plusplus": "off",
+      "no-restricted-syntax": "off",
+      "no-shadow": ["error"],
+      "no-underscore-dangle": 0,
+      "no-useless-constructor": "off",
+      "@typescript-eslint/no-use-before-define": 2,
+      "@typescript-eslint/await-thenable": "error",
+      "@typescript-eslint/unbound-method": ["error", { "ignoreStatic": true }],
+      "no-var": 2,
+      "object-shorthand": ["error", "properties"],
+      "prefer-const": ["error", { "destructuring": "all" }],
+      "prefer-template": 2,
+      "radix": 2,
+      "no-trailing-spaces": "error",
+      "@typescript-eslint/prefer-regexp-exec": 0
+    },
+    "overrides": [
+      {
+          "files": ["*.test.ts"],
+          "rules": {
+              "no-unused-expressions": "off",
+              "@typescript-eslint/unbound-method" : "off"
+          }
+      }
+    ]
+  }

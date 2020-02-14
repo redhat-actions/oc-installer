@@ -31,7 +31,7 @@ suite('Installer', () => {
                 await Installer.installOc(undefined, 'OS');
                 expect.fail();
             } catch (err) {
-                expect(err).equals('Invalid version input. Provide a valid version number or url where to download an oc bundle.');
+                expect(err.message).equals('Invalid version input. Provide a valid version number or url where to download an oc bundle.');
             }
         });
 
@@ -65,7 +65,7 @@ suite('Installer', () => {
                 await Installer.downloadAndExtract('', 'OS');
                 expect.fail();
             } catch (err) {
-                expect(err).equals('Unable to determine oc download URL.');
+                expect(err.message).equals('Unable to determine oc download URL.');
             }
         });
 
@@ -97,7 +97,7 @@ suite('Installer', () => {
                 await Installer.downloadAndExtract('url', 'Linux');
                 expect.fail();
             } catch (err) {
-                expect(err).equals('Unable to download or extract oc binary.');
+                expect(err.message).equals('Unable to download or extract oc binary.');
             }
         });
 
@@ -142,14 +142,14 @@ suite('Installer', () => {
 
         test('check if valid url is returned if major version is 3', async () => {
             sandbox.stub(Installer, 'getOcUtils').resolves(ocUtils);
-            sandbox.stub(Installer, 'getOcBundleByOS').resolves('ocbundle');
+            sandbox.stub(Installer, 'getOcBundleByOS').returns('ocbundle');
             const res = await Installer.getOcBundleUrl('3.11', 'OS');
             expect(res).equals('urlv3/3.11/ocbundle');
         });
 
         test('check if valid url is returned if major version is 4', async () => {
             sandbox.stub(Installer, 'getOcUtils').resolves(ocUtils);
-            sandbox.stub(Installer, 'getOcBundleByOS').resolves('ocbundle');
+            sandbox.stub(Installer, 'getOcBundleByOS').returns('ocbundle');
             const res = await Installer.getOcBundleUrl('4.1', 'OS');
             expect(res).equals('urlv4/4.1/ocbundle');
         });
@@ -162,7 +162,7 @@ suite('Installer', () => {
 
         test('null if unable to find oc bundle url', async () => {
             sandbox.stub(Installer, 'getOcUtils').resolves(ocUtils);
-            const ocBundleStub = sandbox.stub(Installer, 'getOcBundleByOS').resolves(null);
+            const ocBundleStub = sandbox.stub(Installer, 'getOcBundleByOS').returns(null);
             const res = await Installer.getOcBundleUrl('4.1', 'OS');
             expect(ocBundleStub).calledOnceWith('OS');
             expect(res).equals(null);
@@ -171,7 +171,7 @@ suite('Installer', () => {
 
     suite('latest', () => {
         test('returns null if oc bundle url not found', async () => {
-            sandbox.stub(Installer, 'getOcBundleByOS').resolves(null);
+            sandbox.stub(Installer, 'getOcBundleByOS').returns(null);
             const res = await Installer.latest('OS');
             expect(res).equals(null);
         });
@@ -181,7 +181,7 @@ suite('Installer', () => {
                 'openshiftV3BaseUrl': 'urlv3',
                 'openshiftV4BaseUrl': 'urlv4'
             };
-            const ocBundleStub = sandbox.stub(Installer, 'getOcBundleByOS').resolves('ocbundle');
+            const ocBundleStub = sandbox.stub(Installer, 'getOcBundleByOS').returns('ocbundle');
             sandbox.stub(Installer, 'getOcUtils').resolves(ocUtils);
             const res = await Installer.latest('OS');
             expect(ocBundleStub).calledOnceWith('OS');

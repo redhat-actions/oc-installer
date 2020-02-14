@@ -27,7 +27,7 @@ suite('Command', () => {
                 await Command.execute(undefined, 'args');
                 expect.fail();
             } catch (err) {
-                expect(err).equals('Unable to find oc bundle');
+                expect(err.message).equals('Unable to find oc bundle');
             }
         });
 
@@ -36,7 +36,7 @@ suite('Command', () => {
                 await Command.execute('', 'args');
                 expect.fail();
             } catch (err) {
-                expect(err).equals('Unable to find oc bundle');
+                expect(err.message).equals('Unable to find oc bundle');
             }
         });
 

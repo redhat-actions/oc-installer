@@ -58,7 +58,7 @@ suite('ocExec', () => {
             try {
                 await ocExec.run();
             } catch (err) {
-                expect(err).equals('Invalid cmd input. Insert at least one command to be executed.');
+                expect(err.message).equals('Invalid cmd input. Insert at least one command to be executed.');
             }
         });
 
