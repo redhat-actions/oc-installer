@@ -62,6 +62,37 @@ jobs:
 ```
 N.B: The openshift action's step needs to run after actions/checkout@v1
 
+## Proxy Support
+
+If you need a self-hosted runner to communicate via a proxy server you can use one of the following methods, as described in the official [GitHub Actions website](https://help.github.com/en/actions/hosting-your-own-runners/using-a-proxy-server-with-self-hosted-runners):
+
+- Configuring a proxy server using environment variables (https_proxy, http_proxy)
+- Using a .env file to set the proxy configuration
+
+Below an example of workflow setting up environment variables
+
+```yaml
+name: Example workflow for Openshift Action
+on: [push]
+jobs:
+  run:
+    env:
+      HTTPS_PROXY: "${{ secrets.PROXY }}"
+      HTTP_PROXY: "${{ secrets.PROXY }}"
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        version: 'latest'
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+        cmd: |          
+          'version'
+          'new-project my-project'
+```
+
 ## Contributing
 
 This is an open source project open to anyone. This project welcomes contributions and suggestions!
