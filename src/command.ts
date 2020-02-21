@@ -6,15 +6,16 @@
 import * as exec from '@actions/exec';
 import * as split from 'argv-split';
 import * as sub from 'substituter';
+import { ExecOptions } from '@actions/exec/lib/interfaces';
 
 export class Command {
-  static async execute(ocPath: string, args: string): Promise<number> {
+  static async execute(ocPath: string, args: string, options?: ExecOptions): Promise<number> {
     if (!ocPath) {
       return Promise.reject(new Error('Unable to find oc bundle'));
     }
 
     const cmdArgs = Command.prepareOcArgs(args);
-    const exitCode = await exec.exec(`${ocPath} ${cmdArgs}`);
+    const exitCode = await exec.exec(`${ocPath} ${cmdArgs}`, undefined, options);
     return exitCode;
   }
 

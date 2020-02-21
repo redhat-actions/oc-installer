@@ -1,5 +1,6 @@
 import * as chai from 'chai';
 import * as fs from 'mz/fs';
+import * as io from '@actions/io/lib/io';
 import * as ioUtil from '@actions/io/lib/io-util';
 import * as path from 'path';
 import * as sinon from 'sinon';
@@ -7,6 +8,7 @@ import * as sinonChai from 'sinon-chai';
 import * as tc from '@actions/tool-cache';
 import * as validUrl from 'valid-url';
 import { Installer } from '../src/installer';
+import { Command } from '../src/command';
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -208,6 +210,68 @@ suite('Installer', () => {
         test('returns null with invalid OS', async () => {
             const res = await Installer.getOcBundleByOS('OS');
             expect(res).equals(null);
+        });
+    });
+
+    suite('#getlocalOcPath', () => {
+        test('returns path found by which if no error occurs and there is no version as input', async () => {
+          const whichStub = sandbox.stub(io, 'which').resolves('path');
+          const res = await Installer.getLocalOcPath();
+          sinon.assert.calledWith(whichStub, 'oc', true);
+          expect(res).equals('path');
+        });
+    
+        test('returns undefined if which fails retrieving oc path', async () => {
+          sandbox.stub(io, 'which').throws();
+          const res = await Installer.getLocalOcPath('1.1');
+          expect(res).equals(undefined);
+        });
+    
+        test('returns nothing if oc path exists but oc version cannot be retrieved', async () => {
+          sandbox.stub(io, 'which').resolves('path');
+          const getOcStub = sandbox
+            .stub(Installer, 'getOcVersion')
+            .resolves(undefined);
+          const res =  await Installer.getLocalOcPath('1.1');
+          sinon.assert.calledWith(getOcStub, 'path');
+          expect(res).equals(undefined);
+        });
+    
+        test('returns nothing if version found locally is not the one user wants to use', async () => {
+          sandbox.stub(io, 'which').resolves('path');
+          sandbox.stub(Installer, 'getOcVersion').resolves('2.1');
+          const res = await Installer.getLocalOcPath('1.1');
+          expect(res).equals(undefined);
+        });
+    });
+
+    suite('#getOcVersion', () => {
+        let execOcStub: sinon.SinonStub;
+    
+        test('check if execute is called only once if succeed first time', async () => {
+          execOcStub = sandbox.stub(Command, 'execute').resolves(0);
+          await Installer.getOcVersion('path');
+          sinon.assert.calledOnce(execOcStub);
+        });
+    
+        test('check if execOcSync is called twice if first call returns nothing', async () => {
+          execOcStub = sandbox.stub(Command, 'execute')
+                                .onFirstCall()
+                                .resolves(1)
+                                .onSecondCall()
+                                .resolves(0);
+          await Installer.getOcVersion('path');
+          sinon.assert.calledTwice(execOcStub);
+        });
+    
+        test('returns undefined if both oc calls fail', async () => {
+          execOcStub = sandbox.stub(Command, 'execute')
+            .onFirstCall()
+            .resolves(1)
+            .onSecondCall()
+            .resolves(1);
+          const res = await Installer.getOcVersion('path');
+          expect(res).equals(undefined);
         });
     });
 

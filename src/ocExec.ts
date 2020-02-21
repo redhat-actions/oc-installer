@@ -13,6 +13,7 @@ export async function run(): Promise<void> {
   const parameters = core.getInput('parameters');
   const version = core.getInput('version');
   const args = core.getInput('cmd');
+  const useLocalOc = core.getInput('useLocalOc');
   const runnerOS = process.env.RUNNER_OS;
 
   core.debug(version);
@@ -24,7 +25,7 @@ export async function run(): Promise<void> {
   }
   const cmds = args.split('\n');
 
-  const ocPath = await Installer.installOc(version, runnerOS);
+  const ocPath = await Installer.installOc(version, runnerOS, useLocalOc === 'true');
   if (ocPath === null) {
     return Promise.reject(new Error('no oc binary found'));
   }

@@ -40,7 +40,7 @@ export class OcAuth {
     return {
       serverUrl: openShiftServer,
       parameters: paramsJSON,
-      scheme,
+      scheme
     } as OpenShiftEndpoint;
   }
 
@@ -64,13 +64,13 @@ export class OcAuth {
       case BASIC_AUTHENTICATION:
         await Command.execute(
           ocPath,
-          `login ${useCertificateOrSkipTls} -u ${endpoint.parameters.username} -p ${endpoint.parameters.password} ${endpoint.serverUrl}`,
+          `login ${useCertificateOrSkipTls} -u ${endpoint.parameters.username} -p ${endpoint.parameters.password} ${endpoint.serverUrl}`
         );
         break;
       case TOKEN_AUTHENTICATION:
         await Command.execute(
           ocPath,
-          `login ${useCertificateOrSkipTls} --token ${endpoint.parameters.apitoken} ${endpoint.serverUrl}`,
+          `login ${useCertificateOrSkipTls} --token ${endpoint.parameters.apitoken} ${endpoint.serverUrl}`
         );
         break;
       case NO_AUTHENTICATION:

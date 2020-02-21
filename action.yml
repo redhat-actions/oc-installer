@@ -14,6 +14,8 @@ inputs:
     description: 'JSON with values to connect to the Openshift cluster'
   cmd:
     description: 'Oc command to be executed'
+  useLocalOc:
+    description: 'Check if oc is already installed in the machine and use that if available'
 runs:
   using: 'node12'
   main: 'lib/src/ocExec.js'

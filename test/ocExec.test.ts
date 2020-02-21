@@ -37,7 +37,8 @@ suite('ocExec', () => {
                 .onFirstCall().returns('url')
                 .onSecondCall().returns('params')
                 .onThirdCall().returns('version')
-                .onCall(3).returns('cmd');
+                .onCall(3).returns('cmd')
+                .onCall(4).returns('true');
             sandbox.stub(Installer, 'installOc').resolves('path');
             sandbox.stub(OcAuth, 'initOpenShiftEndpoint');
             sandbox.stub(OcAuth, 'loginOpenshift');
@@ -46,7 +47,8 @@ suite('ocExec', () => {
             expect(getInputStub.firstCall).calledWith('openshift_server_url');
             expect(getInputStub.secondCall).calledWith('parameters');
             expect(getInputStub.thirdCall).calledWith('version');
-            expect(getInputStub.lastCall).calledWith('cmd');
+            expect(getInputStub.getCall(3)).calledWith('cmd');
+            expect(getInputStub.lastCall).calledWith('useLocalOc');
         });
 
         test('reject promise if cmd is passed', async () => {

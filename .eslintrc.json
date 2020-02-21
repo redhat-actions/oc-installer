@@ -47,6 +47,7 @@
     "rules": {
       "header/header": [2, "./header.js"],
       "camelcase": 2,
+      "comma-dangle": ["error", "never"],
       "consistent-return": 0,
       "consistent-this": [1, "that"],
       "curly": ["error", "multi-line"],

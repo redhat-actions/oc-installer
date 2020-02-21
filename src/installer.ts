@@ -4,16 +4,25 @@
  *-----------------------------------------------------------------------------------------------*/
 import * as core from '@actions/core';
 import * as fs from 'mz/fs';
+import * as io from '@actions/io/lib/io';
 import * as ioUtil from '@actions/io/lib/io-util';
 import * as path from 'path';
 import * as tc from '@actions/tool-cache';
 import * as validUrl from 'valid-url';
+import { ExecOptions } from '@actions/exec/lib/interfaces';
 import {
-  LATEST, LINUX, MACOSX, OC_TAR_GZ, OC_ZIP, WIN,
+  LATEST, LINUX, MACOSX, OC_TAR_GZ, OC_ZIP, WIN
 } from './constants';
+import { Command } from './command';
 
 export class Installer {
-  static async installOc(version: string, runnerOS: string): Promise<string> {
+  static async installOc(version: string, runnerOS: string, useLocalOc?: boolean): Promise<string> {
+    if (useLocalOc) {
+      const localOcPath = await Installer.getLocalOcPath(version);
+      if (localOcPath) {
+        return localOcPath;
+      }
+    }
     if (!version) {
       return Promise.reject(new Error('Invalid version input. Provide a valid version number or url where to download an oc bundle.'));
     }
@@ -123,6 +132,73 @@ export class Installer {
       }
     }
     return url;
+  }
+
+  /**
+   * Retrieve the path of the oc CLI installed in the machine.
+   *
+   * @param version the version of `oc` to be used. If not specified any `oc` version,
+   *                if found, will be used.
+   * @return the full path to the installed executable or
+   *         undefined if the oc CLI version requested is not found.
+   */
+  static async getLocalOcPath(version?: string): Promise<string | undefined> {
+    let ocPath: string | undefined;
+    try {
+      ocPath = await io.which('oc', true);
+      core.debug(`ocPath ${ocPath}`);
+    } catch (ex) {
+      core.debug(`Oc has not been found on this machine. Err ${ex}`);
+    }
+
+    if (version && ocPath) {
+      const localOcVersion = await Installer.getOcVersion(ocPath);
+      core.debug(`localOcVersion ${localOcVersion} vs ${version}`);
+      if (!localOcVersion
+          || localOcVersion.toLowerCase() !== version.toLowerCase()
+      ) {
+        return undefined;
+      }
+    }
+
+    return ocPath;
+  }
+
+  static async getOcVersion(ocPath: string): Promise<string> {
+    let stdOut = '';
+    const options: ExecOptions = {};
+    options.listeners = {
+      stdout: (data: Buffer): void => {
+        stdOut += data.toString();
+      }
+    };
+
+    let exitCode: number = await Command.execute(
+      ocPath,
+      'version --client=true',
+      options
+    );
+
+    if (exitCode === 1) {
+      core.debug('error executing oc version --short=true --client=true');
+      // if oc version failed we're dealing with oc < 4.1
+      exitCode = await Command.execute(ocPath, 'version', options);
+    }
+
+    if (exitCode === 1) {
+      core.debug('error executing oc version');
+      return undefined;
+    }
+
+    core.debug(`stdout ${stdOut}`);
+    const regexVersion = new RegExp('v[0-9]+.[0-9]+.[0-9]+');
+    const versionObj = regexVersion.exec(stdOut);
+
+    if (versionObj && versionObj.length > 0) {
+      return versionObj[0];
+    }
+
+    return undefined;
   }
 
   static async getOcUtils(): Promise<{ [key: string]: string }> {
