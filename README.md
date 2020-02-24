@@ -10,6 +10,7 @@ The OpenShift Extension for GitHub Actions gives you the ability to create workf
 | `openshift_server_url`        | _required_ | The URL of the Openshift cluster. We suggest to use [secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets#creating-encrypted-secrets) to store Openshift URL. Must be in form `openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}` |
 | `parameters`            | _required_ | JSON with values to connect to the Openshift cluster. We suggest to use secrets to store sensitive data. Must be in form `parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'` [More Info](#openshift-authentication-methods-supported) |
 | `cmd`   | _required_ | One or more oc commands to be executed. |
+| `useLocalOc` | _optional_ | It forces the extension to use, if present, the oc cli found in the machine where the agent is running. If no version is specified, the extension will use the local oc cli no matter its version. If a version is specified then the extension will first check if the oc cli installed has the same version requested by the user, if not, the correct oc cli will be downloaded. |
 
 ### Openshift Authentication Methods Supported
 
