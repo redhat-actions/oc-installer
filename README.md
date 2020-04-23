@@ -46,6 +46,9 @@ The parameters input must be in form `parameters: '{"apitoken": "${{ secrets.API
 ```yaml
 name: Example workflow for Openshift Action
 on: [push]
+env:
+  PROJECT: dev
+
 jobs:
   run:
     runs-on: macos-latest
@@ -59,8 +62,9 @@ jobs:
         parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
         cmd: |          
           'version'
-          'new-project my-project'
+          'new-project ${PROJECT}'
 ```
+
 N.B: The openshift action's step needs to run after actions/checkout@v1
 
 ## Proxy Support
