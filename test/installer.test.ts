@@ -92,13 +92,14 @@ suite('Installer', () => {
             sandbox.stub(tc, 'extractTar').resolves('dir');
             sandbox.stub(ioUtil, 'exists').resolves(false);
             const res = await Installer.downloadAndExtract('url', 'Linux', '');
-            expect(res).deep.equals({ found: false, reason: `An error occurred while downloading and extracting oc binary from url.` });
+            expect(res).deep.equals({ found: false, reason: `An error occurred while downloading and extracting oc binary from url. File undefined not found.` });
         });
 
         test('check if return correct binary with Windows', async () => {
             sandbox.stub(tc, 'downloadTool').resolves('path');
             sandbox.stub(tc, 'extractZip').resolves('dir');
             sandbox.stub(ioUtil, 'exists').resolves(true);
+            sandbox.stub(Installer, 'findOcFile').resolves('dir/oc.exe');
             const fsStub = sandbox.stub(fs, 'chmodSync');
             const res = await Installer.downloadAndExtract('url', 'Windows', '');
             expect(fsStub).calledOnceWith('dir/oc.exe');
@@ -109,6 +110,7 @@ suite('Installer', () => {
             sandbox.stub(tc, 'downloadTool').resolves('path');
             sandbox.stub(tc, 'extractTar').resolves('dir');
             sandbox.stub(ioUtil, 'exists').resolves(true);
+            sandbox.stub(Installer, 'findOcFile').resolves('dir/oc');
             const fsStub = sandbox.stub(fs, 'chmodSync');
             const res = await Installer.downloadAndExtract('url', 'Linux', '');
             expect(fsStub).calledOnceWith('dir/oc');

@@ -41,6 +41,58 @@ It uses an API token to connect to the cluster.
 
 The parameters input must be in form `parameters: '{"apitoken": "${{ secrets.API_TOKEN }}"}'`
 
+## How does OpenShift Action work?
+
+The action has been built to be quite flexible and be used in different use-cases - only set up `oc` to be used later on, or handle the login to the OpenShift cluster or execute a list of oc commands. Based on the inputs the action will behave accordingly.
+
+#### Setup Oc
+
+If you are only interested in setting up `oc` so to use it in a following script, you only need to define the version of the oc cli to be downloaded.
+
+```yaml
+ steps:
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-action
+      with:
+        version: '3.11.90'
+    - name: followingScript
+      run: |
+        oc login --token=${{ secrets.API_TOKEN }} --server=${{ secrets.OPENSHIFT_SERVER_URL }}
+        oc get pods | grep build
+```
+
+#### Setup Oc and log in to the Cluster
+
+If you want the extension to handle the login you have to define the cluster url and the parameters needed to log in.
+
+```yaml
+steps:
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-action
+      with:
+        version: '3.11.90'
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+    - name: followingScript
+      run:  oc get pods | grep build
+```
+#### Setup Oc, log in to the cluster and execute commands
+
+In case you just want to execute commands on your cluster, you can directly define them inside the action.
+
+```yaml
+steps:
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-action
+      with:
+        version: '3.11.90'
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+        cmd: |          
+          'get pods'
+          'new-project name'
+```
+
 ## Example `workflow.yml` with Openshift Action
 
 ```yaml

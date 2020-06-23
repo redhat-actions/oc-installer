@@ -25,7 +25,7 @@ suite('ocExec', () => {
         sandbox.restore();
     });
 
-    /*suite('run', () => {
+    suite('run', () => {
         const endpoint = {
             serverUrl: 'server',
             parameters: JSON.parse('{"key":"value"}'),
@@ -40,6 +40,7 @@ suite('ocExec', () => {
                 .onCall(3).returns('cmd')
                 .onCall(4).returns('true');
             sandbox.stub(Installer, 'installOc').resolves({ found: true, path: 'path' });
+            sandbox.stub(Installer, 'addOcToPath');
             sandbox.stub(OcAuth, 'initOpenShiftEndpoint');
             sandbox.stub(OcAuth, 'loginOpenshift');
             sandbox.stub(Command, 'execute');
@@ -51,16 +52,16 @@ suite('ocExec', () => {
             expect(getInputStub.lastCall).calledWith('useLocalOc');
         });
 
-        test('reject promise if cmd is passed', async () => {
+        test('reject promise if version is not passed and user dont want to use local oc', async () => {
             sandbox.stub(core, 'getInput')
                 .onFirstCall().returns('url')
                 .onSecondCall().returns('params')
-                .onThirdCall().returns('version')
+                .onThirdCall().returns('')
                 .onCall(3).returns('');
             try {
                 await ocExec.run();
             } catch (err) {
-                expect(err.message).equals('Invalid cmd input. Insert at least one command to be executed.');
+                expect(err.message).equals('The action was run without any version as input.');
             }
         });
 
@@ -122,5 +123,5 @@ suite('ocExec', () => {
             await ocExec.run();
             expect(commandStub).calledTwice;
         });
-    });*/
+    });
 });

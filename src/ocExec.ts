@@ -26,19 +26,19 @@ export async function run(): Promise<void> {
   core.debug(runnerOS);
   core.debug(process.env.RUNNER_TEMP);
 
-  if (!args) {
-    return Promise.reject(new Error('Invalid cmd input. Insert at least one command to be executed.'));
-  }
-  const cmds = args.split('\n');
-
   const binaryVersion: BinaryVersion = convertStringToBinaryVersion(version);
   const ocBinary: FindBinaryStatus = await Installer.installOc(binaryVersion, runnerOS, useLocalOc === 'true');
   if (ocBinary.found === false) {
     return Promise.reject(new Error(getReason(ocBinary)));
   }
 
-  const endpoint: OpenShiftEndpoint = OcAuth.initOpenShiftEndpoint(openShiftUrl, parameters);
-  await OcAuth.loginOpenshift(endpoint, ocBinary.path);
+  Installer.addOcToPath(ocBinary.path, runnerOS);
+
+  if (openShiftUrl && parameters) {
+    const endpoint: OpenShiftEndpoint = OcAuth.initOpenShiftEndpoint(openShiftUrl, parameters);
+    await OcAuth.loginOpenshift(endpoint, ocBinary.path);
+  }
+  const cmds = args ? args.split('\n') : [];
   for (const cmd of cmds) {
     // eslint-disable-next-line no-await-in-loop
     await Command.execute(ocBinary.path, cmd);
