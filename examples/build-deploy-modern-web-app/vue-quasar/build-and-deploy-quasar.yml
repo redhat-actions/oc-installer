@@ -1,0 +1,33 @@
+# This workflow will start a new build of our app that will trigger a new deploy.
+# Follow the README.md steps to set up your environment
+#
+# To configure this workflow:
+#
+# 1. Setup secrets in your repository by going to settings
+# 2. Ensure you are using the correct oc version
+# 3. Change the value for the PROJECT
+
+name: Build and Deploy to OpenShift
+on: [push]
+
+env:
+  PROJECT: hello-world
+
+jobs:
+  build:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-actions@v2.1.0
+      with:
+        version: '3.11.230'
+        openshift_server_url: ${{ secrets.CRC_OPENSHIFT_URL }}
+        parameters: '{"apitoken": "${{ secrets.CRC_TOKEN }}", "acceptUntrustedCerts": "true"}'
+        cmd: |
+          oc project ${PROJECT}
+          oc start-build quasar-web-app-builder --follow

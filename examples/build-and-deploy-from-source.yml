@@ -1,18 +1,16 @@
-# This workflow will build a docker container, publish and deploy it to your OpenShift cluster
+# This workflow will build from your source code, publish and deploy it to your OpenShift cluster
 #
 # To configure this workflow:
 #
-# 1. Ensure that your repository contains a Dockerfile
-# 2. Setup secrets in your repository by going to settings
-# 3. Ensure you are using the correct oc version
-# 4. Change the values for the APPNAME, DOCKERIMAGE and PROJECT
+# 1. Setup secrets in your repository by going to settings
+# 2. Ensure you are using the correct oc version
+# 3. Change the values for the APPNAME and PROJECT
 
 name: Build and Deploy to OpenShift
 on: [push]
 
 env:
   PROJECT: hello-world
-  DOCKERIMAGE: node:10
   APPNAME: myapp
 
 jobs:
@@ -32,8 +30,8 @@ jobs:
         parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
       cmd: |
         oc project ${PROJECT}
-        oc new-build --strategy docker --binary --docker-image ${DOCKERIMAGE} --name ${APPNAME}
-        oc start-build ${APPNAME} --from-dir . --follow
+        oc new-build ${GITHUB_WORKSPACE} --name=${APPNAME} --strategy=source --to=${APPNAME}:latest
+        oc start-build ${APPNAME} --from-dir ${GITHUB_WORKSPACE} --follow
         oc new-app ${PROJECT}/${APPNAME}:latest ## this can be removed after the first deploy - 
                                                 ## it will create a deploymentconfig which will trigger a new deploy after a new build
         oc expose svc/"${APPNAME}" ## this can be removed after the first deploy

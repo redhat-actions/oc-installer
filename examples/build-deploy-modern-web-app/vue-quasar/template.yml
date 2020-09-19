@@ -1,0 +1,191 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: quasar-web-app
+parameters:
+  - name: SOURCE_REPOSITORY_URL
+    description: The source URL for the application
+    displayName: Source URL
+    value: ""
+    required: true
+  - name: SOURCE_REPOSITORY_REF
+    description: The branch name for the application
+    displayName: Source Branch
+    value: master
+    required: true
+  - name: SOURCE_REPOSITORY_DIR
+    description: The location within the source repo of the application
+    displayName: Source Directory
+    value: .
+    required: true
+  - name: OUTPUT_DIR
+    description: The location of the compiled static files from your web apps builder
+    displayName: Output Directory
+    value: dist/spa
+    required: false
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: quasar-web-app-builder
+  spec: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: static-web-app-running-on-nginx
+  spec: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: web-app-s2i-image
+  spec:
+    tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: nodeshift/centos7-s2i-web-app:10.x
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: nginx-image-runtime
+  spec:
+    tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'centos/nginx-112-centos7:latest'
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: quasar-web-app-builder
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: quasar-web-app-builder:latest
+    postCommit: {}
+    resources: {}
+    source:
+      git:
+        uri: ${SOURCE_REPOSITORY_URL}
+        ref: ${SOURCE_REPOSITORY_REF}
+      contextDir: ${SOURCE_REPOSITORY_DIR}
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+          - name: OUTPUT_DIR
+            value: ${OUTPUT_DIR}
+        from:
+          kind: ImageStreamTag
+          name: web-app-s2i-image:latest
+        incremental: true
+      type: Source 
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: static-web-app-running-on-nginx
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: static-web-app-running-on-nginx:latest
+    postCommit: {}
+    resources: {}
+    source:
+      type: Image
+      images:
+        - from:
+            kind: ImageStreamTag
+            name: quasar-web-app-builder:latest
+          paths:
+            - destinationDir: .
+              sourcePath: /opt/app-root/output/.
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nginx-image-runtime:latest
+        incremental: true
+      type: Source
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+    - type: ImageChange
+      imageChange:
+        from:
+          kind: ImageStreamTag
+          name: quasar-web-app-builder:latest
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: quasar-web-app
+    name: quasar-web-app
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    selector:
+      app: quasar-web-app
+    strategy:
+      rollingParams:
+        timeoutSeconds: 3600
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: quasar-web-app
+      spec:
+        containers:
+        - env:
+          - name: KUBERNETES_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          image: static-web-app-running-on-nginx
+          imagePullPolicy: IfNotPresent
+          name: static-web-app-running-on-nginx
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+    triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - static-web-app-running-on-nginx
+          from:
+            kind: ImageStreamTag
+            name: 'static-web-app-running-on-nginx:latest'
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: quasar-web-app
+    name: quasar-web-app
+  spec:
+    ports:
+    - name: http
+      port: 8080
+    selector:
+      app: quasar-web-app
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: quasar-web-app
+    name: quasar-web-app
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: quasar-web-app
+
