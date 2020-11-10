@@ -23,7 +23,6 @@ export function run(): Promise<void> {
         timeout: 50000,
         slow: 50000
     });
-    mocha.useColors(true);
 
     const testsRoot = path.resolve(__dirname);
 
@@ -51,3 +50,8 @@ export function run(): Promise<void> {
         });
     });
 }
+
+run().catch((err) => {
+    console.error(err);
+    process.exit(1);
+})

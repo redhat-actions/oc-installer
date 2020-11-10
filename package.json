@@ -1,63 +1,57 @@
 {
-  "name": "openshift-actions",
-  "version": "1.0.0",
-  "description": "The OpenShift Extension for GitHub Actions gives you the ability to create workflows to automate the deployment process to OpenShift",
+  "name": "oc-installer",
+  "description": "Install oc into a GitHub Action runner",
   "scripts": {
-    "clean": "rm -rf lib || rmdir lib /s /q",
+    "clean": "rm -rf lib/ dist/ || rmdir lib dist /s /q",
     "compile": "tsc",
+    "bundle": "ncc build src/ocExec.ts --source-map --minify",
     "eslint": "node_modules/.bin/eslint . --ext .ts --quiet",
     "build": "npm run eslint && npm run compile",
     "test": "npm run clean && npm run compile && node ./lib/test/unit-tests.js",
-    "coverage:upload": "codecov -f coverage/coverage-final.json",
     "production": "npm clean-install --production"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/redhat-developer/openshift-actions.git"
+    "url": "https://github.com/redhat-actions/oc-installer.git"
   },
   "author": "Red Hat",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/redhat-developer/openshift-actions/issues"
+    "url": "https://github.com/redhat-actions/oc-installer/issues"
   },
-  "homepage": "https://github.com/redhat-developer/openshift-actions#readme",
+  "homepage": "https://github.com/redhat-actions/oc-installer#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/exec": "^1.0.1",
     "@actions/io": "^1.0.1",
     "@actions/tool-cache": "^1.1.2",
-    "@types/node": "^12.12.7",
-    "argv-split": "^2.0.1",
-    "mz": "^2.7.0",
     "semver": "^7.3.2",
-    "substituter": "^1.3.0",
-    "typescript": "^3.7.2",
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "@types/chai": "^4.2.5",
     "@types/glob": "^7.1.1",
+    "@types/istanbul": "^0.4.30",
     "@types/mocha": "^5.2.6",
+    "@types/node": "^12.19.4",
+    "@types/semver": "^7.3.4",
     "@types/sinon": "^7.5.1",
     "@types/sinon-chai": "^3.2.3",
+    "@types/valid-url": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^2.8.0",
     "@typescript-eslint/parser": "^2.8.0",
+    "@vercel/ncc": "^0.25.1",
     "chai": "^4.2.0",
     "codecov": "^3.7.1",
     "decache": "^4.5.1",
-    "eslint": "^6.7.1",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.7.0",
+    "eslint": "^6.8.0",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-header": "^3.0.0",
     "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-json": "^2.0.1",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.2.0",
-    "mocha-jenkins-reporter": "^0.4.1",
-    "remap-istanbul": "^0.13.0",
+    "mocha": "^8.2.1",
+    "mocha-jenkins-reporter": "^0.4.5",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
-    "vscode-test": "^1.2.0"
+    "typescript": "^4.0.5"
   }
 }

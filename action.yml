@@ -1,21 +1,14 @@
 name: 'OpenShift Action'
-description: 'This action allows you to connect to an OpenShift cluster and execute oc commands on it'
+description: "This action installs 'oc', the OpenShift Client."
 author: 'Red Hat'
 branding:
   icon: circle
   color: red
 inputs:
-  version:
-    description: 'Choose the oc version you want to use to execute the command. It can be a version or an url where to download oc cli desired. If left blank latest oc cli will be used.'
+  oc_version:
+    description: "oc version to install. It can be a version (eg. 4.6.0) or a URL pointing to an oc download. If left blank, the latest oc is installed."
     default: 'latest'
-  openshift_server_url:
-    description: 'The URL of the Openshift cluster'
-  parameters:
-    description: 'JSON with values to connect to the Openshift cluster'
-  cmd:
-    description: 'Oc command to be executed'
-  useLocalOc:
-    description: 'Check if oc is already installed in the machine and use that if available'
+    required: true
 runs:
   using: 'node12'
-  main: 'lib/src/ocExec.js'
+  main: 'dist/index.js'

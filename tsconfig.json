@@ -4,6 +4,7 @@
         "module": "commonjs",
         "outDir": "lib",
         "rootDir": ".",
+        "strict": true,
     },
     "exclude": [
         "node_modules"

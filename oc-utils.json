@@ -1,4 +1,0 @@
-{
-    "openshiftV3BaseUrl": "https://mirror.openshift.com/pub/openshift-v3/clients",
-    "openshiftV4BaseUrl": "https://mirror.openshift.com/pub/openshift-v4/clients/oc"
-}

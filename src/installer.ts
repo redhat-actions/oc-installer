@@ -3,18 +3,18 @@
  *  Licensed under the MIT License. See LICENSE file in the project root for license information.
  *-----------------------------------------------------------------------------------------------*/
 import * as core from '@actions/core';
-import * as fs from 'mz/fs';
-import * as glob from 'glob';
 import * as io from '@actions/io/lib/io';
 import * as ioUtil from '@actions/io/lib/io-util';
+import * as exec from '@actions/exec';
+import { ExecOptions } from '@actions/exec/lib/interfaces';
+import * as fs from 'fs';
+import * as glob from 'glob';
 import * as path from 'path';
 import * as semver from 'semver';
 import * as tc from '@actions/tool-cache';
-import { ExecOptions } from '@actions/exec/lib/interfaces';
 import {
-  LATEST, LINUX, MACOSX, OC_TAR_GZ, OC_ZIP, WIN
+  LATEST
 } from './constants';
-import { Command } from './command';
 import { BinaryVersion, FindBinaryStatus } from './utils/execHelper';
 
 export class Installer {
@@ -26,31 +26,30 @@ export class Installer {
       }
     }
 
-    if (versionToUse.valid === false) {
-      return { found: false, reason: versionToUse.reason };
-    }
-
     // check if oc version requested exists in cache
-    let versionToCache: string;
+    let versionToCache: string | undefined;
     if (versionToUse.type === 'number') {
       versionToCache = Installer.versionToCache(versionToUse.value);
-      const toolCached: FindBinaryStatus = Installer.versionInCache(versionToCache, runnerOS);
-      if (toolCached.found) {
-        return toolCached;
+      if (versionToCache) {
+        const toolCached: FindBinaryStatus = Installer.versionInCache(versionToCache, runnerOS);
+        if (toolCached.found) {
+          return toolCached;
+        }
       }
     }
 
-    const url: string = await Installer.getOcURLToDownload(versionToUse, runnerOS);
+    const url: string = Installer.getOcURLToDownload(versionToUse, runnerOS);
     if (!url) {
-      return { found: false, reason: 'Unable to determine URL where to download oc executable.' };
+      throw new Error('Unable to determine URL where to download oc executable.');
     }
 
-    core.debug(`downloading: ${url}`);
+    core.info(`Installing oc version ${versionToUse.value}`);
+    core.info(`Downloading from ${url}`);
     const ocBinary = await Installer.downloadAndExtract(url, runnerOS, versionToCache);
     return ocBinary;
   }
 
-  static async downloadAndExtract(url: string, runnerOS: string, versionToCache: string): Promise<FindBinaryStatus> {
+  static async downloadAndExtract(url: string, runnerOS: string, versionToCache: string | undefined): Promise<FindBinaryStatus> {
     if (!url) {
       return { found: false, reason: 'URL where to download oc is not valid.' };
     }
@@ -71,88 +70,78 @@ export class Installer {
     fs.chmodSync(ocBinary, '0755');
     if (versionToCache) {
       await tc.cacheFile(ocBinary, path.parse(ocBinary).base, 'oc', versionToCache);
+      core.debug('Added oc to tool cache');
     }
+    core.info(`oc installed to ${ocBinary}`);
     return { found: true, path: ocBinary };
   }
 
-  static async getOcURLToDownload(version: BinaryVersion, runnerOS: string): Promise<string> {
+  static getOcURLToDownload(version: BinaryVersion, runnerOS: string): string {
     let url = '';
-    if (!version.valid) {
-      return undefined;
-    }
 
     if (version.type === 'url') {
       return version.value;
     }
 
-    if (version.type === 'latest') {
-      url = await Installer.latest(runnerOS);
+    if (version.type === LATEST) {
+      url = Installer.latest(runnerOS);
       return url;
     }
 
     // determine the base_url based on version
     const reg = new RegExp('\\d+(?=\\.)');
-    const vMajorRegEx: RegExpExecArray = reg.exec(version.value);
+    const vMajorRegEx = reg.exec(version.value);
     if (!vMajorRegEx || vMajorRegEx.length === 0) {
-      core.debug('Error retrieving version major');
-      return undefined;
+      throw new Error(`Failed to parse version input "${version.value}`);
     }
     const vMajor: number = +vMajorRegEx[0];
 
-    const ocUtils = await Installer.getOcUtils();
+    const ocUtils = Installer.getOcUtils();
     if (vMajor === 3) {
       url = `${ocUtils.openshiftV3BaseUrl}/${version.value}/`;
     } else if (vMajor === 4) {
       url = `${ocUtils.openshiftV4BaseUrl}/${version.value}/`;
     } else {
-      core.debug('Invalid version');
-      return undefined;
+      throw new Error('Major version must be "3" or "4". No other versions of oc are supported.');
     }
 
     const bundle = Installer.getOcBundleByOS(runnerOS);
-    if (!bundle) {
-      core.debug('Unable to find oc bundle url');
-      return undefined;
-    }
-
     url += bundle;
 
     core.debug(`archive URL: ${url}`);
     return url;
   }
 
-  static async latest(runnerOS: string): Promise<string> {
+  static latest(runnerOS: string): string {
     const bundle = Installer.getOcBundleByOS(runnerOS);
-    if (!bundle) {
-      core.debug('Unable to find oc bundle url');
-      return null;
-    }
 
-    const ocUtils = await Installer.getOcUtils();
+    const ocUtils = Installer.getOcUtils();
     const url = `${ocUtils.openshiftV4BaseUrl}/${LATEST}/${bundle}`;
 
     core.debug(`latest stable oc version: ${url}`);
     return url;
   }
 
-  static getOcBundleByOS(runnerOS: string): string | null {
+  static getOcBundleByOS(runnerOS: string): string {
     let url = '';
-    // determine the bundle path based on the OS type
+    // determine the bundle path within the oc ownload site based on the OS type
+  const OC_TAR_GZ = 'oc.tar.gz';
+  const OC_ZIP = 'oc.zip';
     switch (runnerOS) {
       case 'Linux': {
-        url += `${LINUX}/${OC_TAR_GZ}`;
+        url += `linux/${OC_TAR_GZ}`;
         break;
       }
       case 'macOS': {
-        url += `${MACOSX}/${OC_TAR_GZ}`;
+        url += `macosx/${OC_TAR_GZ}`;
         break;
       }
       case 'Windows': {
-        url += `${WIN}/${OC_ZIP}`;
+        url += `windows/${OC_ZIP}`;
         break;
       }
       default: {
-        return null;
+        throw new Error(`Unrecognized runner OS "${runnerOS}"`);
       }
     }
     return url;
@@ -178,10 +167,10 @@ export class Installer {
     }
 
     // if user requested to use a specific version, we need to check that version is the one installed
-    if (version.valid && version.type === 'number' && ocPath) {
+    if (version && version.type === 'number' && ocPath) {
       const localOcVersion: BinaryVersion = await Installer.getOcVersion(ocPath);
       core.debug(`localOcVersion ${localOcVersion} vs ${version.value}`);
-      if (!localOcVersion.valid || localOcVersion.value.toLowerCase() !== version.value.toLowerCase()) {
+      if (!localOcVersion || localOcVersion.value.toLowerCase() !== version.value.toLowerCase()) {
         ocBinaryStatus = { found: false, reason: 'Oc installed has a different version of the one requested.' };
       }
     }
@@ -198,17 +187,16 @@ export class Installer {
       }
     };
 
-    let exitCode: number = await Command.execute(ocPath, 'version --client=true', options);
+    let exitCode: number = await Installer.execute(ocPath, ['version', '--client=true'], options);
 
     if (exitCode === 1) {
       core.debug('error executing oc version --short=true --client=true');
       // if oc version failed we're dealing with oc < 4.1
-      exitCode = await Command.execute(ocPath, 'version', options);
+      exitCode = await Installer.execute(ocPath, ['version'], options);
     }
 
-    if (exitCode === 1) {
-      core.debug('error executing oc version');
-      return { valid: false, reason: `An error occured when retrieving version of oc CLI in ${ocPath}` };
+    if (exitCode !== 0) {
+      throw new Error(`Received exit code ${exitCode} when retrieving version of oc CLI in ${ocPath}`);
     }
 
     core.debug(`stdout ${stdOut}`);
@@ -216,21 +204,24 @@ export class Installer {
     const versionObj = regexVersion.exec(stdOut);
 
     if (versionObj && versionObj.length > 0) {
-      return { valid: true, type: 'number', value: versionObj[0] };
+      return { type: 'number', value: versionObj[0] };
     }
 
-    return { valid: false, reason: `The version of oc CLI in ${ocPath} is in an unknown format.` };
+    throw new Error(`Could not parse version output "${versionObj} from ${ocPath}`);
   }
 
-  static async getOcUtils(): Promise<{ [key: string]: string }> {
-    // eslint-disable-next-line no-undef
-    const rawData = await fs.readFile(path.join(__dirname, '/../../oc-utils.json'));
-    return JSON.parse(rawData);
+  static getOcUtils(): { openshiftV3BaseUrl: string; openshiftV4BaseUrl: string } {
+    return {
+      openshiftV3BaseUrl: 'https://mirror.openshift.com/pub/openshift-v3/clients',
+      openshiftV4BaseUrl: 'https://mirror.openshift.com/pub/openshift-v4/clients/oc'
+    };
   }
 
-  private static versionToCache(version: string): string {
-    const sanitizedVersion: semver.SemVer = semver.coerce(version);
-    if (!sanitizedVersion) return undefined;
+  private static versionToCache(version: string): string | undefined {
+    const sanitizedVersion = semver.coerce(version);
+    if (!sanitizedVersion) {
+      return undefined;
+    }
     return sanitizedVersion.version;
   }
 
@@ -259,32 +250,31 @@ export class Installer {
   /**
    * Adds oc to the PATH environment variable.
    *
-   * @param ocPath the full path to the oc binary. Must be a non null.
-   * @param osType the OS type. One of 'Linux', 'Darwin' or 'Windows_NT'.
+   * @param ocPath the full path to the oc binary.
    */
-  static addOcToPath(ocPath: string, osType: string): void {
-    if (!ocPath) {
-      core.debug('Unable to add null or empty Oc path to the PATH.');
-      return;
-    }
-    let dir = '';
-    if (osType.includes('Windows')) {
-      dir = ocPath.substr(0, ocPath.lastIndexOf('\\'));
-    } else {
-      dir = ocPath.substr(0, ocPath.lastIndexOf('/'));
+  static addOcToPath(ocPath: string): void {
+    const dir = path.dirname(ocPath);
+    if (!dir) {
+      throw new Error(`Failed to parse directory name from ${ocPath}`);
     }
     core.addPath(dir);
+    core.info(`Added oc directory to PATH`);
   }
 
-  static async findOcFile(folder, file): Promise<string> {
+  static async findOcFile(folder: string, file: string): Promise<string> {
     return new Promise((resolve, reject) => {
       glob(`${folder}/**/${file}`, (err, res) => {
         if (err) {
-          reject(new Error(`Unable to find oc exewcutable inside the directory ${folder}`));
+          reject(new Error(`Unable to find oc executable inside the directory ${folder}`));
         } else {
           resolve(res[0]);
         }
       });
     });
+  }
+
+  static async execute(ocPath: string, args: string[], options?: ExecOptions): Promise<number> {
+    const exitCode = await exec.exec(`${ocPath}`, args, options);
+    return exitCode;
   }
 }
