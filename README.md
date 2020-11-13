@@ -21,10 +21,9 @@ The `oc_version` can be:
   - The version must exist on our public download site. Refer to the download sites for [v3](https://mirror.openshift.com/pub/openshift-v3/clients/) and [v4](https://mirror.openshift.com/pub/openshift-v4/clients/oc/).
   - This type of version is required to use the [caching feature](#how-the-cache-works).
 - A URL from which to download `oc`.
-  - If the runner is Linux or MacOS, the URL is expected to point to a `.tar.gz` file.
-  - If the runner is Windows, the URL is expected to point to a `.zip` file.
 
 ### Example
+Also see [this repository's workflows](./.github/workflows/).
 
 ```yaml
  steps:
@@ -32,6 +31,7 @@ The `oc_version` can be:
       uses: redhat-actions/oc-installer@v1
       with:
         version: '4.6'
+  # Now, oc is available for the rest of these steps.
 ```
 
 ## Proxy Support

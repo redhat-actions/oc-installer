@@ -1,4 +1,4 @@
-name: oc-installer Test
+name: oc-installer Versions Test
 on: [ push, workflow_dispatch ]
 
 jobs:
@@ -7,8 +7,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        oc_version: [ 3.11.173, 4.6 ]
+        os: [ ubuntu-latest ]
+        oc_version: [ 3.11.173, 4.6, 'https://mirror.openshift.com/pub/openshift-v3/clients/3.11.318/linux/oc.tar.gz' ]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -25,7 +25,7 @@ jobs:
 
       # oc 3 doesn't have --client flag
       - name: Test (v3)
-        if: "startsWith(matrix.oc_version, '3')"
+        if: "startsWith(matrix.oc_version, '3') || contains(matrix.oc_version, 'openshift-v3')"
         run: |
           oc version
 

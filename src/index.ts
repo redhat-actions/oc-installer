@@ -4,32 +4,25 @@
  *-----------------------------------------------------------------------------------------------*/
 import * as core from '@actions/core';
 import { Installer } from './installer';
-import {
-  BinaryVersion,
-  convertStringToBinaryVersion,
-  FindBinaryStatus,
-  getReason
-} from './utils/execHelper';
-import { INPUT_OC_VERSION } from "./constants";
+import utils from './util';
 
 export async function run(): Promise<void> {
-  const ocVersion = core.getInput(INPUT_OC_VERSION);
-  const runnerOS = process.env.RUNNER_OS;
+  const ocVersionInput = core.getInput(utils.INPUT_OC_VERSION);
+  const runnerOS = utils.getRunnerOS();
   if (!runnerOS) {
     throw new Error('Error reading runner OS');
   }
 
-  core.debug(`${INPUT_OC_VERSION}=${ocVersion}`);
+  core.debug(`${utils.INPUT_OC_VERSION}=${ocVersionInput}`);
   core.debug(`runnerOS: ${runnerOS}`);
   core.debug(`runnerTemp ${process.env.RUNNER_TEMP}`);
 
-  const binaryVersion: BinaryVersion = convertStringToBinaryVersion(ocVersion);
-  const ocBinary: FindBinaryStatus = await Installer.installOc(binaryVersion, runnerOS);
-  if (ocBinary.found === false) {
-    return Promise.reject(new Error(getReason(ocBinary)));
+  const ocPath = await Installer.installOc(ocVersionInput);
+  if (!ocPath.found) {
+    throw new Error(ocPath.reason || 'Unknown error');
   }
 
-  Installer.addOcToPath(ocBinary.path);
+  Installer.addOcToPath(ocPath.path);
 }
 
 run().catch(core.setFailed);

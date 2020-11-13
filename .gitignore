@@ -1,4 +1,4 @@
-.vscode-test/**
-lib/**
+.vscode-test/
+lib/
 coverage/
 node_modules/

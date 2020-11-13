@@ -82,7 +82,10 @@
       "prefer-template": 2,
       "radix": 2,
       "no-trailing-spaces": "error",
-      "@typescript-eslint/prefer-regexp-exec": 0
+      "@typescript-eslint/prefer-regexp-exec": 0,
+      "quotes": [ "warn", "single" ],
+      "@typescript-eslint/no-namespace": "off",
+      "brace-style": [ "warn", "1tbs" ]
     },
     "overrides": [
       {
