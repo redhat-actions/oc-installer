@@ -62,9 +62,26 @@ namespace Utils {
   }
 
   export function getLatestUrl(): string {
-    const bundle = getZipPath();
-    const url = `${getDownloadSite(4)}/${LATEST}/${bundle}`;
-    return url;
+    // The latest uses a different path/filename from the others because it's under the ocp subdir
+
+    const latestDir = 'https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/';
+
+    let filename = 'openshift-client-';
+    const os = getRunnerOS();
+    switch (os) {
+      case 'Linux':
+        filename += 'linux.tar.gz';
+        break;
+      case 'macOS':
+        filename += 'mac.tar.gz';
+        break;
+      case 'Windows':
+        filename += 'windows.zip';
+        break;
+      default:
+        throw new Error(`Unrecognized runner OS "${os}"`);
+    }
+    return latestDir + filename;
   }
 }
 export default Utils;
