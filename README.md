@@ -30,7 +30,7 @@ Also see [this repository's workflows](./.github/workflows/).
     - name: Install oc
       uses: redhat-actions/oc-installer@v1
       with:
-        version: '4.6'
+        oc_version: '4.6'
   # Now, oc is available for the rest of these steps.
 ```
 
