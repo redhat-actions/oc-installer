@@ -19,7 +19,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install
-        uses: redhat-actions/oc-installer@master
+        uses: redhat-actions/oc-installer@main
         with:
           oc_version: ${{ matrix.oc_version }}
 
