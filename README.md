@@ -9,7 +9,7 @@
 
 `oc-installer` installs [`oc`](https://github.com/openshift/oc) onto your GitHub Action runner.
 
-Note that GitHub's [Ubuntu Environments](https://github.com/actions/virtual-environments#available-environments) come with `oc 4.6` installed. So, if you are using Ubuntu and do not require a different `oc` version, this action is not necessary for you to use.
+Note that GitHub's [Ubuntu Environments](https://github.com/actions/virtual-environments#available-environments) come with `oc 4.6` installed. So, if you are using one of those environments and do not require a different `oc` version, this action is not necessary for your workflow.
 
 Once `oc` is present, use [oc-login](https://github.com/redhat-actions/oc-login) to log into the cluster and set up a Kubernetes context.
 
