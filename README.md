@@ -11,12 +11,14 @@
 
 Note that GitHub's [Ubuntu Environments](https://github.com/actions/virtual-environments#available-environments) come with `oc 4.6` installed. So, if you are using Ubuntu and do not require a different `oc` version, this action is not necessary for you to use.
 
+Once `oc` is present, use [oc-login](https://github.com/redhat-actions/oc-login) to log into the cluster and set up a Kubernetes context.
+
 ## Inputs:
 
 The action has one input: `oc_version`. If not specified, it defaults to `latest`.
 
 The `oc_version` can be:
-- `latest` (the default) to use the latest release.
+- `latest` (the default) to use the latest stable release.
 - An existing `oc` version. For example, `4.6` or `3.11.173`.
   - The version must exist on our public download site. Refer to the download sites for [v3](https://mirror.openshift.com/pub/openshift-v3/clients/) and [v4](https://mirror.openshift.com/pub/openshift-v4/clients/oc/).
   - This type of version is required to use the [caching feature](#how-the-cache-works).

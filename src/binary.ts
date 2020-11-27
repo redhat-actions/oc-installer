@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE file in the project root for license information.
  *-----------------------------------------------------------------------------------------------*/
 
-import * as core from "@actions/core";
+import * as core from '@actions/core';
 import * as validUrl from 'valid-url';
 
 import util from './util';
