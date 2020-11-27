@@ -1,4 +1,4 @@
-name: 'OpenShift Action'
+name: 'OpenShift Installer'
 description: "Install the OpenShift Client (oc) into an action runner"
 author: 'Red Hat'
 branding:
