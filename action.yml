@@ -1,5 +1,5 @@
 name: 'OpenShift Action'
-description: "This action installs 'oc', the OpenShift Client."
+description: "Install the OpenShift Client (oc) into an action runner"
 author: 'Red Hat'
 branding:
   icon: circle
