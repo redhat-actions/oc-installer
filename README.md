@@ -3,7 +3,7 @@
 [![oc-installer Test](https://github.com/redhat-actions/oc-installer/workflows/oc-installer%20Test/badge.svg)](https://github.com/redhat-actions/oc-installer/actions?query=workflow%3A%22oc-installer+Test%22)
 [![Verify Bundle](https://github.com/redhat-actions/oc-installer/workflows/Verify%20Bundle/badge.svg)](https://github.com/redhat-actions/oc-installer/actions?query=workflow%3A%22Verify+Bundle%22)
 <br><br>
-[![tag badge](https://img.shields.io/github/v/tag/redhat-actions/oc-installer?sort=semver)](https://github.com/redhat-actions/oc-installer/tags)
+[![tag badge](https://img.shields.io/github/v/tag/redhat-actions/oc-installer)](https://github.com/redhat-actions/oc-installer/tags)
 [![license badge](https://img.shields.io/github/license/redhat-actions/oc-installer)](./LICENSE)
 [![size badge](https://img.shields.io/github/size/redhat-actions/oc-installer/dist/index.js)](./dist)
 
