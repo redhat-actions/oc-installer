@@ -7,7 +7,7 @@
 [![license badge](https://img.shields.io/github/license/redhat-actions/oc-installer)](./LICENSE)
 [![size badge](https://img.shields.io/github/size/redhat-actions/oc-installer/dist/index.js)](./dist)
 
-`oc-installer` installs [`oc`](https://github.com/openshift/oc) onto your GitHub Action runner.
+`oc-installer` installs the OpenShift Client CLI [`oc`](https://github.com/openshift/oc) onto your GitHub Action runner.
 
 Note that GitHub's [Ubuntu Environments](https://github.com/actions/virtual-environments#available-environments) come with `oc 4.6` installed. So, if you are using one of those environments and do not require a different `oc` version, this action is not necessary for your workflow.
 
