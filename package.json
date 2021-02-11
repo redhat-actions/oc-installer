@@ -3,12 +3,12 @@
   "description": "Install oc into a GitHub Action runner",
   "scripts": {
     "clean": "rm -rf lib/ dist/ || rmdir lib dist /s /q",
-    "compile": "tsc",
+    "compile": "tsc -p .",
     "bundle": "ncc build src/index.ts --source-map --minify",
-    "eslint": "node_modules/.bin/eslint . --ext .ts --quiet",
     "build": "npm run eslint && npm run compile",
     "test": "npm run clean && npm run compile && node ./lib/test/unit-tests.js",
-    "production": "npm clean-install --production"
+    "production": "npm clean-install --production",
+    "lint": "eslint . --max-warnings=0"
   },
   "repository": {
     "type": "git",
@@ -25,9 +25,13 @@
     "@actions/exec": "^1.0.1",
     "@actions/io": "^1.0.1",
     "@actions/tool-cache": "^1.1.2",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "glob": "^7.1.6"
   },
   "devDependencies": {
+    "@redhat-actions/action-io-generator": "^1.5.0",
+    "@redhat-actions/eslint-config": "^1.2.11",
+    "@redhat-actions/tsconfig": "^1.1.0",
     "@types/chai": "^4.2.5",
     "@types/glob": "^7.1.1",
     "@types/istanbul": "^0.4.30",
@@ -36,16 +40,13 @@
     "@types/sinon": "^7.5.1",
     "@types/sinon-chai": "^3.2.3",
     "@types/valid-url": "^1.0.3",
-    "@typescript-eslint/eslint-plugin": "^2.8.0",
-    "@typescript-eslint/parser": "^2.8.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
     "@vercel/ncc": "^0.25.1",
     "chai": "^4.2.0",
     "codecov": "^3.7.1",
     "decache": "^4.5.1",
-    "eslint": "^6.8.0",
-    "eslint-import-resolver-typescript": "^2.0.0",
-    "eslint-plugin-header": "^3.0.0",
-    "eslint-plugin-import": "2.18.2",
+    "eslint": "^7.18.0",
     "mocha": "^8.2.1",
     "mocha-jenkins-reporter": "^0.4.5",
     "sinon": "^7.5.0",

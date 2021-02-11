@@ -3,4 +3,3 @@ node_modules
 lib
 coverage
 .vscode-test
-header.js
