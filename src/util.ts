@@ -10,16 +10,20 @@ namespace Utils {
 
     export const LATEST = "latest";
 
-    let runnerOS: RunnerOS | undefined;
-    export function getRunnerOS(): RunnerOS | undefined {
-        if (runnerOS) {
-            return runnerOS;
-        }
+    let runnerOS: RunnerOS;
+    export function getRunnerOS(): RunnerOS {
+        const envRunnerOS = process.env.RUNNER_OS as RunnerOS | undefined;
 
-        runnerOS = process.env.RUNNER_OS as RunnerOS | undefined;
-        if (runnerOS == null) {
+        if (envRunnerOS === undefined) {
             throw new Error("Could not determine OS; RUNNER_OS is not set in the environment.");
         }
+        else {
+            runnerOS = envRunnerOS;
+        }
+
+        // if (runnerOS == null) {
+        //     throw new Error("Could not determine OS; RUNNER_OS is not set in the environment.");
+        // }
         return runnerOS;
     }
 
@@ -32,10 +36,6 @@ namespace Utils {
         default:
             throw new Error(`No download site for oc version "${version}". Supported versions are "3" and "4".`);
         }
-        //   if (version === 3) {
-        //   }
-        //   else if (version === 4) {
-        //   }
     }
 
     export function getOcBinaryFilename(): string {

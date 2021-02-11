@@ -43,15 +43,6 @@ export class Installer {
         default:
             break;
         }
-        // if (binaryVersion.type === "latest") {
-        // }
-        // else if (binaryVersion.type === "url") {
-        // }
-        // else if (binaryVersion.type === "version") {
-        //     core.info(`Installing oc version ${binaryVersion.parsedVersion.version}`);
-        //     url = Installer.getOcURLToDownload(binaryVersion.parsedVersion);
-        // }
-
         if (!url) {
             throw new Error(`Unrecognized version input "${versionInput}"`);
         }
@@ -100,7 +91,7 @@ export class Installer {
     static getOcURLToDownload(version: BinaryVersion): string {
         const major = version.major;
         if (major !== 3 && major !== 4) {
-            throw new Error("Major version must be \"3\" or \"4\". No other versions of oc are supported.");
+            throw new Error(`Major version must be "3" or "4". No other versions of oc are supported.`);
         }
 
         const url = `${utils.getDownloadSite(major)}/${version.version}/${utils.getZipPath()}`;

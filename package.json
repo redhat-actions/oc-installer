@@ -3,7 +3,7 @@
   "description": "Install oc into a GitHub Action runner",
   "scripts": {
     "clean": "rm -rf lib/ dist/ || rmdir lib dist /s /q",
-    "compile": "tsc -p.",
+    "compile": "tsc -p .",
     "bundle": "ncc build src/index.ts --source-map --minify",
     "build": "npm run eslint && npm run compile",
     "test": "npm run clean && npm run compile && node ./lib/test/unit-tests.js",
@@ -25,8 +25,6 @@
     "@actions/exec": "^1.0.1",
     "@actions/io": "^1.0.1",
     "@actions/tool-cache": "^1.1.2",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
     "valid-url": "^1.0.9",
     "glob": "^7.1.6"
   },
