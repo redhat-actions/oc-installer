@@ -14,6 +14,8 @@ Note that GitHub's [Ubuntu Environments](https://github.com/actions/virtual-envi
 
 Once `oc` is present, use [oc-login](https://github.com/redhat-actions/oc-login) to log into the cluster and set up a Kubernetes context.
 
+⚠ ️Also see the [`openshift-tools-installer`](https://github.com/redhat-actions/openshift-tools-installer), which can install `oc` as well as other CLIs. It has support for caching across multiple workflows, and allows inputting semantic version ranges.
+
 ## Inputs:
 
 The action has one input: `oc_version`. If not specified, it defaults to `latest`.
