@@ -1,5 +1,10 @@
 name: oc-installer Versions Test
-on: [ push, workflow_dispatch, pull_request ]
+on:
+  push:
+  workflow_dispatch:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'  # every day at midnight
 
 jobs:
   install:
@@ -12,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-     
+
       # Checkout oc installer action github repository
       - name: Checkout oc-installer action
         uses: actions/checkout@v2

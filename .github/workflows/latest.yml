@@ -1,5 +1,10 @@
 name: oc-installer Platform Test
-on: [push, workflow_dispatch, pull_request]
+on:
+  push:
+  workflow_dispatch:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'  # every day at midnight
 
 jobs:
   install:
