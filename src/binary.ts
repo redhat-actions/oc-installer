@@ -82,10 +82,10 @@ export function stringToVersion(versionStr: string): BinaryTypeVersion {
     const patch = patchStr ? formatVersionSegment("patch", patchStr) : undefined;
 
     let version: string = major.toString();
-    if (minor) {
+    if (minor != null) {
         version += `.${minor}`;
     }
-    if (patch) {
+    if (patch != null) {
         version += `.${patch}`;
     }
     // core.info(`Version is ${version}`);

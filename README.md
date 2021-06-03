@@ -12,9 +12,12 @@
 
 Note that GitHub's [Ubuntu Environments](https://github.com/actions/virtual-environments#available-environments) come with `oc 4.6` installed. So, if you are using one of those environments and do not require a different `oc` version, this action is not necessary for your workflow.
 
-Once `oc` is present, use [oc-login](https://github.com/redhat-actions/oc-login) to log into the cluster and set up a Kubernetes context.
+Once `oc` is present, use [**oc-login**](https://github.com/redhat-actions/oc-login) to log into the cluster and set up a Kubernetes context.
 
-⚠ ️Also see the [`openshift-tools-installer`](https://github.com/redhat-actions/openshift-tools-installer), which can install `oc` as well as other CLIs. It has support for caching across multiple workflows, and allows inputting semantic version ranges.
+### ⚠ Note
+This action has been superseded by [**openshift-tools-installer**](https://github.com/redhat-actions/openshift-tools-installer), which can install `oc` as well as other CLIs. It has support for caching across multiple workflows, and allows inputting semantic version ranges.
+
+This action can still be used, but points to an old download directory which is no longer updated as of December 2020.
 
 ## Inputs:
 
