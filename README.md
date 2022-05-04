@@ -44,7 +44,7 @@ Also see [this repository's workflows](./.github/workflows/).
 
 ## Proxy Support
 
-If you need a self-hosted runner to communicate via a proxy server, you can use one of the following methods as described in the [GitHub Actions documentation](https://help.github.com/en/actions/hosting-your-own-runners/using-a-proxy-server-with-self-hosted-runners).
+If you need a self-hosted runner to communicate via a proxy server, you can use one of the following methods as described in the [GitHub Actions documentation](https://help.github.com/en/actions/hosting-your-own-runners/using-a-proxy-server-with-self-hosted-runners). <!-- markdown-link-check-disable-line -->
 
 - Configuring a proxy server using environment variables (*HTTPS_PROXY*, *HTTP_PROXY*)
 - Using an `.env` file to set the proxy configuration
