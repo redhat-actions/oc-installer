@@ -1,7 +1,7 @@
 # oc-installer
 
 [![CI checks](https://github.com/redhat-actions/oc-installer/workflows/CI%20checks/badge.svg)](https://github.com/redhat-actions/oc-installer/actions?query=workflow%3A%22CI+checks%22)
-[![oc-installer Test](https://github.com/redhat-actions/oc-installer/workflows/oc-installer%20Test/badge.svg)](https://github.com/redhat-actions/oc-installer/actions?query=workflow%3A%22oc-installer+Test%22)
+[![oc-installer Versions Test](https://github.com/redhat-actions/oc-installer/actions/workflows/tests.yml/badge.svg)](https://github.com/redhat-actions/oc-installer/actions/workflows/tests.yml)
 [![Link checker](https://github.com/redhat-actions/oc-installer/workflows/Link%20checker/badge.svg)](https://github.com/redhat-actions/oc-installer/actions?query=workflow%3A%22Link+checker%22)
 <br><br>
 [![tag badge](https://img.shields.io/github/v/tag/redhat-actions/oc-installer)](https://github.com/redhat-actions/oc-installer/tags)
