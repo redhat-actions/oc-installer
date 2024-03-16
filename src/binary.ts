@@ -61,7 +61,7 @@ function formatVersionSegment(segmentName: string, segment: string): number {
 }
 
 export function stringToVersion(versionStr: string): BinaryTypeVersion {
-    const regexVersion = new RegExp("v?([0-9]+)([.][0-9]+)?([.][0-9]+)?");
+    const regexVersion = /v?([0-9]+)([.][0-9]+)?([.][0-9]+)?/;
 
     const parseVersionResult = regexVersion.exec(versionStr);
 

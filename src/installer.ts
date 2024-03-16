@@ -49,7 +49,8 @@ export class Installer {
 
         core.info(`Downloading ${utils.getOcBinaryFilename()} from ${url} ...`);
         const ocBinary = await Installer.downloadAndExtract(
-            url, binaryVersion.type === "version" ? binaryVersion.parsedVersion : undefined
+            url,
+            binaryVersion.type === "version" ? binaryVersion.parsedVersion : undefined
         );
         return ocBinary;
     }
@@ -195,7 +196,7 @@ export class Installer {
     static async findOcFile(folder: string, file: string): Promise<string | undefined> {
         return new Promise<string | undefined>((resolve, reject) => {
             glob(`${folder}/**/${file}`, (err, res) => {
-                if (err) {
+                if (err instanceof Error) {
                     reject(new Error(`Unable to find ${file} inside the directory ${folder}: ${err.stack}`));
                 }
                 else {

@@ -19,7 +19,7 @@ jobs:
     steps:
       # Checkout oc installer action github repository
       - name: Checkout oc-installer action
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install
         uses: ./
