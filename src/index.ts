@@ -8,6 +8,13 @@ import utils from "./util";
 import { Inputs } from "./generated/inputs-outputs";
 
 export async function run(): Promise<void> {
+    core.warning(
+        "redhat-actions/oc-installer is deprecated and will no longer receive updates. "
+        + "Please migrate to redhat-actions/openshift-tools-installer, which supports "
+        + "semver ranges, multiple tools, arm64, and cross-workflow caching. "
+        + "See https://github.com/redhat-actions/openshift-tools-installer for details.",
+    );
+
     const ocVersionInput = core.getInput(Inputs.OC_VERSION);
     const runnerOS = utils.getRunnerOS();
     // if (!runnerOS) {
