@@ -1,23 +1,19 @@
 # oc-installer
 
-[![CI checks](https://github.com/redhat-actions/oc-installer/workflows/CI%20checks/badge.svg)](https://github.com/redhat-actions/oc-installer/actions?query=workflow%3A%22CI+checks%22)
-[![oc-installer Versions Test](https://github.com/redhat-actions/oc-installer/actions/workflows/tests.yml/badge.svg)](https://github.com/redhat-actions/oc-installer/actions/workflows/tests.yml)
-[![Link checker](https://github.com/redhat-actions/oc-installer/workflows/Link%20checker/badge.svg)](https://github.com/redhat-actions/oc-installer/actions?query=workflow%3A%22Link+checker%22)
-<br><br>
+> **This action is deprecated.** Please use [**openshift-tools-installer**](https://github.com/redhat-actions/openshift-tools-installer) instead.
+>
+> `openshift-tools-installer` supports `oc` and 17 other CLIs, semver ranges, arm64, cross-workflow caching, and is actively maintained.
+>
+> `oc-installer` points to a download directory that has not been updated since December 2020 and will no longer receive updates. Existing workflows referencing `@v1` will continue to work, but a deprecation warning will be emitted in your workflow logs.
+
+---
+
 [![tag badge](https://img.shields.io/github/v/tag/redhat-actions/oc-installer)](https://github.com/redhat-actions/oc-installer/tags)
 [![license badge](https://img.shields.io/github/license/redhat-actions/oc-installer)](./LICENSE)
-[![size badge](https://img.shields.io/github/size/redhat-actions/oc-installer/dist/index.js)](./dist)
 
 `oc-installer` installs the OpenShift Client CLI [`oc`](https://github.com/openshift/oc) onto your GitHub Action runner.
 
-Note that GitHub's [Ubuntu Environments](https://github.com/actions/virtual-environments#available-environments) come with `oc 4.6` installed. So, if you are using one of those environments and do not require a different `oc` version, this action is not necessary for your workflow.
-
 Once `oc` is present, use [**oc-login**](https://github.com/redhat-actions/oc-login) to log into the cluster and set up a Kubernetes context.
-
-### ⚠ Note
-This action has been superseded by [**openshift-tools-installer**](https://github.com/redhat-actions/openshift-tools-installer), which can install `oc` as well as other CLIs. It has support for caching across multiple workflows, and allows inputting semantic version ranges.
-
-This action can still be used, but points to an old download directory which is no longer updated as of December 2020.
 
 ## Inputs:
 
